@@ -11,16 +11,16 @@ class CommonFields(models.Model):
         abstract = True
 
 
-class Packages(models.Model, CommonFields):
+class DatasheetsPackages(models.Model, CommonFields):
     name = models.CharField(max_length=31)
     description = models.CharField(max_length=150)
-    consist_of_files = models.ManyToManyField(Files)
+    consist_of_files = models.ManyToManyField(Datasheets)
 
 
-class Files(models.Model, CommonFields):
+class Datasheets(models.Model, CommonFields):
     initial_filename = models.CharField(max_length=120)
-    manufacturer = models.ForeignKey(Manufacturer, on_delete=PROTECT)
     file = models.FileField()
+    manufacturer = models.ForeignKey(Manufacturer, on_delete=PROTECT)
 
 
 class Manufacturer(models.Model, CommonFields):
