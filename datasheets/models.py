@@ -1,5 +1,5 @@
 from django.db import models
-import datetime
+import datetime,
 
 
 class CommonFields(models.Model):
@@ -13,18 +13,27 @@ class CommonFields(models.Model):
 
 class Manufacturer(CommonFields):
     full_name = models.CharField(max_length=120)
-    short_name = models.CharField(max_length=10)
+    short_name = models.CharField(max_length=10, unique=True)
+
+    def __str__(self):
+        return "{} ({})".format(self.short_name, self.full_name)
 
 
 class Datasheet(CommonFields):
     initial_filename = models.CharField(max_length=120)
     file = models.FileField()
     manufacturer = models.ForeignKey(Manufacturer, on_delete=models.PROTECT)
+
+    def save(self, *args, **kwargs):
+        self.initial_filename =
+    # TODO: Change filenames on upload
+    # TODO: Evaluate md5 on any other hash of file
+    # TODO: Hash field must be unique
     # TODO: Add uuid field with uniqueness
 
-class DatasheetsPackage(CommonFields):
+class Package(CommonFields):
     name = models.CharField(max_length=31)
-    consist_of_files = models.ManyToManyField(Datasheet)
+    datasheets = models.ManyToManyField(Datasheet)
 
 
 
