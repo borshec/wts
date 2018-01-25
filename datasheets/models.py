@@ -9,7 +9,7 @@ def random_byte_value():
     return str(uuid4()).encode()
 
 
-def rename_file__assign_fields(instance, filename):
+def rename_file_assign_fields(instance, filename):
     instance.initial_filename = filename
     f = File(instance.dsfile)
     hasher = hashlib.sha1()
@@ -38,7 +38,7 @@ class Manufacturer(CommonFields):
 
 
 class Datasheet(CommonFields):
-    dsfile = models.FileField(upload_to=rename_file__assign_fields)
+    dsfile = models.FileField(upload_to=rename_file_assign_fields, blank=True)
     initial_filename = models.CharField(max_length=120, editable=False)
     sha1_digest = models.BinaryField(unique=True, editable=False)
     manufacturer = models.ForeignKey(Manufacturer, on_delete=models.PROTECT)
