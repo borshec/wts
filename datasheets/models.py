@@ -1,5 +1,6 @@
 from django.db import models
-import datetime, hashlib, random
+import datetime
+import hashlib
 from django.core.files import File
 from uuid import uuid4
 
@@ -7,18 +8,20 @@ from uuid import uuid4
 def random_byte_value():
     return str(uuid4()).encode()
 
-def file_hash(file):
-    f = File(file)
-    hash_obj = hashlib.sha1()
-    for chunk in f.chunks():
-        hash_obj.update(chunk)
-    return hash_obj.digest()
 
-def rename_file(file):
+def rename_file__assign_fields(instance, filename):
+    instance.initial_filename = filename
+    f = File(instance.dsfile)
+    hasher = hashlib.sha1()
+    for chunk in f.chunks():
+        hasher.update(chunk)
+    instance.sha1_digest = hasher.digest()
+    return str(uuid4())
 
 
 class CommonFields(models.Model):
-    creation_date = models.DateTimeField(default=datetime.datetime.now, editable=False)
+    creation_date = models.DateTimeField(default=datetime.datetime.now,
+                                         editable=False)
     description = models.CharField(max_length=300)
     # TODO: add user field to common model
 
@@ -35,29 +38,18 @@ class Manufacturer(CommonFields):
 
 
 class Datasheet(CommonFields):
+    dsfile = models.FileField(upload_to=rename_file__assign_fields)
     initial_filename = models.CharField(max_length=120, editable=False)
-    file = models.FileField()
-    sha1_digest = models.BinaryField(unique=True, editable=False, default=random_byte_value)
+    sha1_digest = models.BinaryField(unique=True, editable=False)
     manufacturer = models.ForeignKey(Manufacturer, on_delete=models.PROTECT)
 
     def __str__(self):
-        return "{} ( {} )".format(self.id, self.file)
+        return "{} ( {} )".format(self.id, self.initial_filename)
 
-    def save(self, *args, **kwargs):
-        self.sha1_digest=file_hash(self.file)
-        self.initial_filename = str(self.file)
-        print("TEST")
-        super().save(*args, **kwargs)
+    # TODO: change link on file in admin panel
+    # TODO: move renaming function to class
 
-    # TODO: Change filenames on upload
-    # TODO: Evaluate md5 on any other hash of file
-    # TODO: Hash field must be unique
-    # TODO: Add uuid field with uniqueness
 
 class Package(CommonFields):
     name = models.CharField(max_length=31)
     datasheets = models.ManyToManyField(Datasheet)
-
-
-
-
