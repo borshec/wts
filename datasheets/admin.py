@@ -7,10 +7,13 @@ from .models import Datasheet, Package, Manufacturer
 class DatasheetAdminForm(ModelForm):
     class Meta:
         model = Datasheet
+
         fields = '__all__'
-        widgets = {'dsfile': DateTimeInput(),}
+        widgets = {'dsfile': ClearableFileInput(),}
+# value parameter for ClearableFileInput.render  - a django file object with url attribute
 
 class DatasheetAdmin(admin.ModelAdmin):
     form = DatasheetAdminForm
+    list_display = ('id', 'dsfile', 'description', 'initial_filename')
 
 admin.site.register(Datasheet, DatasheetAdmin)

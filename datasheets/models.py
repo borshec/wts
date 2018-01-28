@@ -9,13 +9,13 @@ def random_byte_value():
     return str(uuid4()).encode()
 
 
-def rename_file_assign_fields(instance, filename):
-    instance.initial_filename = filename
-    f = File(instance.dsfile)
+def rename_file_assign_fields(self, filename):
+    self.initial_filename = filename
+    f = File(self.dsfile)
     hasher = hashlib.sha1()
     for chunk in f.chunks():
         hasher.update(chunk)
-    instance.sha1_digest = hasher.digest()
+    self.sha1_digest = hasher.digest()
     return str(uuid4())
 
 
