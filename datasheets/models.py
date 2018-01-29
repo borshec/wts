@@ -1,3 +1,8 @@
+if __name__ == "__main__":
+    import django
+    django.setup()
+
+
 from django.db import models
 import datetime
 import hashlib
@@ -42,6 +47,10 @@ class Datasheet(CommonFields):
     initial_filename = models.CharField(max_length=120, editable=False)
     sha1_digest = models.BinaryField(unique=True, editable=False)
     manufacturer = models.ForeignKey(Manufacturer, on_delete=models.PROTECT)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.dsfile.name = self.initial_filename
 
     def __str__(self):
         return "{} ( {} )".format(self.id, self.initial_filename)
