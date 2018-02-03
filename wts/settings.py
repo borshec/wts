@@ -31,7 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    "datasheets.apps.DatasheetsConfig",
+    "veiledfiles.apps.VeiledfilesConfig",
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -121,5 +121,7 @@ USE_TZ = False
 STATIC_URL = '/static/'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, "media/")
+
+MEDIA_RAW_URL = "/raw_media/"
 
 MEDIA_URL = "/media/"

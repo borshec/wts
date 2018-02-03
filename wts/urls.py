@@ -16,10 +16,11 @@ Including another URLconf
 from django.contrib import admin
 from django.conf import  settings
 from django.conf.urls.static import static
-from django.urls import path
+from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path(str.replace(settings.MEDIA_RAW_URL, "/", "", 1) , include('veiledfiles.urls'))
 ]
 
 if settings.DEBUG:
