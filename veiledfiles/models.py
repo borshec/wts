@@ -50,6 +50,8 @@ class VeiledFile(models.Model):
         instance.file.initial_filename = values[field_names.index('initial_filename')]
         return instance
 
+    #def get_file_
+
     def __str__(self):
         return "{} ( {} )".format(self.id, self.initial_filename)
 

@@ -2,5 +2,5 @@ from django.urls import path
 from veiledfiles import views
 
 urlpatterns = [
-    path('<filename>', views.get_real_url)
+    path('<filename>', views.get_file)
 ]
