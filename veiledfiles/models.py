@@ -4,7 +4,7 @@ from uuid import uuid4
 from hashlib import sha1, blake2b
 from django.conf import settings
 from mimetypes import guess_type
-import pdb
+import ipdb
 
 
 class VeiledFieldFile(FieldFile):
@@ -38,6 +38,9 @@ class VeiledFile(models.Model):
     mime_type = models.CharField(max_length=127, editable=False)
 
     def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+
+    def clean(self):
         self.initial_filename = self.file.name
         self.mime_type = guess_type(self.initial_filename)[0]
         f = File(self.file)
@@ -45,7 +48,6 @@ class VeiledFile(models.Model):
         for chunk in f.chunks():
             hasher.update(chunk)
         self.hexdigest = hasher.hexdigest()
-        super().save(*args, **kwargs)
 
     @classmethod
     def from_db(cls, db, field_names, values):
