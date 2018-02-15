@@ -1,6 +1,6 @@
 from django.db import models
 from django.db.models.fields.files import FileField, FieldFile, File
-from django.core.exceptions import ValidationError
+from django.core.exceptions import ValidationError, ObjectDoesNotExist
 from uuid import uuid4
 from hashlib import sha1, blake2b
 from django.conf import settings
@@ -42,7 +42,6 @@ class VeiledFile(models.Model):
         super().save(*args, **kwargs)
 
     def clean(self):
-        #ipdb.set_trace()
         self.initial_filename = self.file.name
         self.mime_type = guess_type(self.initial_filename)[0]
         f = File(self.file)
@@ -52,10 +51,15 @@ class VeiledFile(models.Model):
         self.hexdigest = hasher.hexdigest()
         try:
             self.__class__.objects.get(hexdigest=self.hexdigest)
-        except:
+        except ObjectDoesNotExist:
             pass
         else:
             raise ValidationError('Файл аналогичный файлу "{}" уже есть в базе'.format(self.initial_filename))
+        ipdb.set_trace()
+        self.clean_fields()
+        self.validate_unique()
+
+        # TODO Empty form raise error
 
     @classmethod
     def from_db(cls, db, field_names, values):
