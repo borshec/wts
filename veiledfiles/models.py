@@ -5,7 +5,7 @@ from uuid import uuid4
 from hashlib import md5
 from django.conf import settings
 from mimetypes import guess_type
-import ipdb
+# import ipdb
 
 
 class VeiledFieldFile(FieldFile):

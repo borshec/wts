@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from veiledfiles.models import VeiledFile
 from django.http import HttpResponse
-import ipdb
+# import ipdb
 
 # Create your views here.
 
