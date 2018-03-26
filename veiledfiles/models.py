@@ -33,7 +33,7 @@ class VeiledFile(models.Model):
 
     initial_filename = models.CharField(max_length=120, editable=False)
     file = VeiledFileField(upload_to=change_filename)
-    hexdigest = models.CharField(max_length=16, unique=True, editable=False)
+    hexdigest = models.CharField(max_length=32, unique=True, editable=False)
     mime_type = models.CharField(max_length=127, editable=False)
 
     def save(self, *args, **kwargs):
@@ -53,7 +53,6 @@ class VeiledFile(models.Model):
             pass
         else:
             raise ValidationError('Файл аналогичный файлу "{}" уже есть в базе'.format(self.initial_filename))
-        ipdb.set_trace()
         self.clean_fields()
         self.validate_unique()
 
